@@ -10,6 +10,10 @@ class Anticheat {
     private _camera = mp.cameras.new("gameplay")
 
     constructor() {
+    }
+
+
+    Init() {
         mp.events.add('Client:Anticheat:GiveWeapon', this.giveWeapon.bind(this))
         mp.events.add('Client:Anticheat:RemoveWeapon', this.removeWeapon.bind(this))
         mp.events.add('Client:Anticheat:ClearWeapons', this.clearWeapons.bind(this))
@@ -39,9 +43,9 @@ class Anticheat {
         this._currentWeapons = this._currentWeapons.filter(weapon => weapon.weaponHash !== weaponHash);
     }
 
-    giveWeapon(hash: number, ammo: number): void {
-        if (!this.hasWeapon(hash)) {
-            this._currentWeapons.push(new Weapon(hash, ammo));
+    giveWeapon(weaponHash: number, weaponAmmo: number): void {
+        if (!this.hasWeapon(weaponHash)) {
+            this._currentWeapons.push(new Weapon(weaponHash, weaponAmmo));
         }
     }
 
@@ -135,7 +139,7 @@ class Anticheat {
     }
     
     
-    checkWeaponCheat(targetPosition : Vector3Mp, targetEntity : PlayerMp) {
+    checkWeaponCheat(targetPosition : Vector3Mp, targetEntity : PlayerMp) {   
         if (Date.now() - this._timeout < 1000) {
             return;
         }
@@ -165,7 +169,8 @@ class Anticheat {
         }
     }
 
-     checkTeleport(){
+   
+    checkTeleport(){
         var currentPos = mp.players.local.position
     
         const distance = mp.game.gameplay.getDistanceBetweenCoords(
@@ -193,4 +198,6 @@ class Anticheat {
     }
 }
 
-export default Anticheat;
+export const anticheat = new Anticheat();
+
+anticheat.Init()
